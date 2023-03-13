@@ -1,5 +1,11 @@
 import React from 'react';
+import { Outlet } from 'react-router-dom';
 
 export default function Root() {
-  return <h1>I'm root</h1>;
+  return (
+    <h1>
+      I'm root
+      <Outlet />
+    </h1>
+  );
 }
