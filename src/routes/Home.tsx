@@ -6,6 +6,8 @@ import {
   HStack,
   Image,
   Img,
+  Skeleton,
+  SkeletonText,
   Text,
   VStack,
 } from '@chakra-ui/react';
@@ -30,11 +32,12 @@ export default function Home() {
         '2xl': 'reapet(5, 1fr)',
       }}
     >
-      {[1, 2, 3, 4, 5, 6, 4, 5, 6, 6, 7, 8, 9, 4, 5, 6, 3, 6, 56, 5, 6, 3].map(
-        (index) => (
-          <Room key={index} />
-        )
-      )}
+      <Box>
+        <Skeleton height={280} rounded="2xl" mb={7} />
+        <SkeletonText w="80%" noOfLines={2} mb={7} />
+        <SkeletonText w="50%" noOfLines={1} />
+      </Box>
+      <Room />
     </Grid>
   );
 }
