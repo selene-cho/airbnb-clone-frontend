@@ -28,7 +28,7 @@ export default function Header() {
 
   const { toggleColorMode } = useColorMode();
   const logoColor = useColorModeValue('red.500', 'red.200'); // light Mode 일ㄷ 때 값, dark Mode 일 때 값 -> chakara 기본 Hook
-  const Icon = useColorModeValue(FaMoon, FaSun);
+  const Icon = useColorModeValue(FaMoon, FaSun); // 컴포넌트 만들기 위해 첫글자 대문자로 시작
 
   return (
     <HStack
