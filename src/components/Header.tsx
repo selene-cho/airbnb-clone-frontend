@@ -4,6 +4,7 @@ import {
   HStack,
   IconButton,
   LightMode,
+  Stack,
   useColorMode,
   useColorModeValue,
   useDisclosure,
@@ -31,10 +32,20 @@ export default function Header() {
   const Icon = useColorModeValue(FaMoon, FaSun); // 컴포넌트 만들기 위해 첫글자 대문자로 시작
 
   return (
-    <HStack
+    <Stack
       justifyContent={'space-between'}
       py={5}
-      px={10}
+      px={40}
+      alignItems="center"
+      direction={{
+        // 반응형으로 direction 위치 변경 위하면 HStack VStack 대신 Stack 써야 반응형 적용됨
+        sm: 'column',
+        md: 'row', // md 이상의 크기라면 row로 적용됨
+      }}
+      spacing={{
+        sm: 4,
+        md: 0,
+      }}
       borderBottomWidth={1}
     >
       {/* react Icons에 색적용 하려면 일일히 색 가져와야하니까 chakra UI 컴포넌트 Box(div)로 감싸서 chakra UI 문법 color 적용하면 간단 */}
@@ -60,6 +71,6 @@ export default function Header() {
       </HStack>
       <LoginModal isOpen={isLoginOpen} onClose={onLoginClose} />
       <SignUpModal isOpen={isSignUpOpen} onClose={onSignUpClose} />
-    </HStack>
+    </Stack>
   );
 }
