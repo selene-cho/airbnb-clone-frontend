@@ -3,29 +3,12 @@ import { useQuery } from '@tanstack/react-query';
 import { getRooms } from '../api';
 import Room from '../components/Room';
 import RoomSkeleton from '../components/RoomSkeleton';
-
-interface IPhoto {
-  pk: string;
-  file: string;
-  description: string;
-}
-
-interface IRoom {
-  // interface 이름은 앞에 I 붙여주는 것이 좋음! 이름 중복 피하기 위함
-  pk: number;
-  name: string;
-  country: string;
-  city: string;
-  price: number;
-  rating: number;
-  is_owner: boolean;
-  photos: IPhoto[]; // Room은 photos라는 array가지고 있음!
-}
+import { IRoomList } from '../types';
 
 export default function Home() {
   // Query에는 queryKey 만들어줘야함
   // key는 fetch한 결과물을 기억하는 캐싱작업에 사용, key는 array여야 함
-  const { isLoading, data } = useQuery<IRoom[]>(['rooms'], getRooms); // rooms라는 key에 fetch 해온 것 담김
+  const { isLoading, data } = useQuery<IRoomList[]>(['rooms'], getRooms); // rooms라는 key에 fetch 해온 것 담김
   // getRooms 함수가 API로부터 Query 가져옴
   // -> isLoading 중인지 아닌지 알려줌
   // -> json을 retrun 하니까 그것을 data로 받아와서 data 준비여부 알려줌 (함수가 리턴하는 결과물 data로 받아옴)
