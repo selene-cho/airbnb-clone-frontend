@@ -3,6 +3,7 @@ import axios from 'axios';
 
 const instance = axios.create({
   baseURL: 'http://127.0.0.1:8001/api/v1/',
+  withCredentials: true, // api에 요청을 할때 cookie를 보내겠다는 의미 (자바스크립트는 자동으로 cookie 보내지 않기 때문)
 });
 
 export const getRooms = () =>

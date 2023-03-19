@@ -76,7 +76,7 @@ export default function Header() {
             </>
           ) : (
             // 로그인했으면 (isLoggedIn이면) Avatar 보여줘
-            <Avatar size={'md'} />
+            <Avatar name={user?.name} src={user?.avatar} size={'md'} />
           ) // user 정보 아직 Loading중이면 아무것도 보여주지마
         ) : null}
       </HStack>
