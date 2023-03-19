@@ -1,5 +1,6 @@
 import { Grid } from '@chakra-ui/react';
-import { useState, useEffect } from 'react';
+import { useQuery } from '@tanstack/react-query';
+import { getRooms } from '../api';
 import Room from '../components/Room';
 import RoomSkeleton from '../components/RoomSkeleton';
 
@@ -22,22 +23,15 @@ interface IRoom {
 }
 
 export default function Home() {
-  const [isLoading, setIsLoading] = useState(true); // 유저가 페이지 방문하면 기본적으로 화면 로딩중
-  const [rooms, setRooms] = useState<IRoom[]>([]); // rooms는 array!
-  const fetchRooms = async () => {
-    const response = await fetch('http://127.0.0.1:8000/api/v1/rooms/'); // 백엔드 해당 url에서 fetch
-    const json = await response.json(); // response 로부터 json 추출
-    setRooms(json); // json을 setRooms -> rooms 변수에 저장 -> typescript는 백엔드에서 추출한 json이 무슨 type인지 모르기 때문에 interface 적어줌
-    setIsLoading(false); // 로딩중이었던 것은 false 바꿈
-  };
-  useEffect(() => {
-    // 유저 방문시, useEffect 호출,
-    fetchRooms(); // fetchRooms 함수 시작
-  }, []);
-  //CORS Error: 서버가 사용자들에게 무언가를 fetch하는 것을 허용하지 않는 것 -> 서버가 몇몇url fetch하도록 허용시켜야 함
+  // Query에는 queryKey 만들어줘야함
+  // key는 fetch한 결과물을 기억하는 캐싱작업에 사용, key는 array여야 함
+  const { isLoading, data } = useQuery<IRoom[]>(['rooms'], getRooms); // rooms라는 key에 fetch 해온 것 담김
+  // getRooms 함수 가져가서 isLoading 중인지 아닌지 알려줌
+  // -> json을 retrun 하니까 그것을 data로 받아와서 data 준비여부 알려줌
+  // -> 그 결과를 rooms 라는 캐시에 저장
   return (
     <Grid
-      my={10}
+      mt={10}
       px={{
         sm: 10,
         lg: 40,
@@ -66,16 +60,20 @@ export default function Home() {
           <RoomSkeleton />
         </>
       ) : null}
-      {rooms.map((room) => (
-        <Room
-          imageUrl={room.photos[0].file}
-          name={room.name}
-          rating={room.rating}
-          city={room.city}
-          country={room.country}
-          price={room.price}
-        />
-      ))}
+      {data?.map(
+        (
+          room // data undefined일 수도 있기 때문에 ? 붙여주기
+        ) => (
+          <Room
+            imageUrl={room.photos[0].file}
+            name={room.name}
+            rating={room.rating}
+            city={room.city}
+            country={room.country}
+            price={room.price}
+          />
+        )
+      )}
     </Grid>
   );
 }

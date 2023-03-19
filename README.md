@@ -6,3 +6,4 @@
 \$ npm i @chakra-ui/react @emotion/react @emotion/styled framer-motion <br>
 \$ npm i react-router-dom <br>
 \$ npm install react-icons --save <br>
+\$ npm i @tanstack/react-query
