@@ -9,6 +9,7 @@ import {
   VStack,
 } from '@chakra-ui/react';
 import { FaRegHeart, FaStar } from 'react-icons/fa';
+import { Link } from 'react-router-dom';
 
 interface IRoomProps {
   // props의 type 명시
@@ -18,9 +19,11 @@ interface IRoomProps {
   city: string;
   country: string;
   price: number;
+  pk: number;
 }
 
 export default function Room({
+  pk,
   imageUrl,
   name,
   rating,
@@ -31,37 +34,39 @@ export default function Room({
   // typescript는 props 쓰기 위해서 어떤 종류의 props인지 알려줘야함 :IRoomProps에 정의해놨다는 것 알려주기
   const gray = useColorModeValue('gray.600', 'gay.300');
   return (
-    <VStack alignItems={'flex-start'}>
-      {/* gap 값은 rem / 5개 같은 크기로 한줄에 꽉차게 반복*/}
-      <Box position="relative" overflow={'hidden'} mb={3} rounded="2xl">
-        <Image minH="280" src={imageUrl} />
-        <Button
-          variant={'unstyled'}
-          position="absolute"
-          top={0}
-          right={0}
-          color="white"
-        >
-          <FaRegHeart size="20px" />
-        </Button>
-      </Box>
-      <Box>
-        <Grid gap={2} templateColumns={'6fr 1fr'}>
-          <Text display={'block'} as="b" noOfLines={1} fontSize="md">
-            {name}
+    <Link to={`/rooms/${pk}`}>
+      <VStack alignItems={'flex-start'}>
+        {/* gap 값은 rem / 5개 같은 크기로 한줄에 꽉차게 반복*/}
+        <Box position="relative" overflow={'hidden'} mb={3} rounded="2xl">
+          <Image minH="280" src={imageUrl} />
+          <Button
+            variant={'unstyled'}
+            position="absolute"
+            top={0}
+            right={0}
+            color="white"
+          >
+            <FaRegHeart size="20px" />
+          </Button>
+        </Box>
+        <Box>
+          <Grid gap={2} templateColumns={'6fr 1fr'}>
+            <Text display={'block'} as="b" noOfLines={1} fontSize="md">
+              {name}
+            </Text>
+            <HStack spacing={1} alignItems="center">
+              <FaStar size={12} />
+              <Text fontSize={'sm'}>{rating}</Text>
+            </HStack>
+          </Grid>
+          <Text fontSize={'sm'} color={gray}>
+            {city}, {country}
           </Text>
-          <HStack spacing={1} alignItems="center">
-            <FaStar size={12} />
-            <Text fontSize={'sm'}>{rating}</Text>
-          </HStack>
-        </Grid>
+        </Box>
         <Text fontSize={'sm'} color={gray}>
-          {city}, {country}
+          <Text as="b">₩{price}</Text> / 박
         </Text>
-      </Box>
-      <Text fontSize={'sm'} color={gray}>
-        <Text as="b">₩{price}</Text> / 박
-      </Text>
-    </VStack>
+      </VStack>
+    </Link>
   );
 }

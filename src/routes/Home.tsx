@@ -66,6 +66,8 @@ export default function Home() {
           room // data undefined일 수도 있기 때문에 ? 붙여주기
         ) => (
           <Room
+            key={room.pk}
+            pk={room.pk}
             imageUrl={room.photos[0].file}
             name={room.name}
             rating={room.rating}
