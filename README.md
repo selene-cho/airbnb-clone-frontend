@@ -7,3 +7,4 @@
 \$ npm i react-router-dom <br>
 \$ npm install react-icons --save <br>
 \$ npm i @tanstack/react-query
+\& npm i axios

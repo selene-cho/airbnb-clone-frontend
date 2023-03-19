@@ -1,7 +1,8 @@
-const BASE_URL = 'http://127.0.0.1:8000/api/v1';
+import axios from 'axios';
 
-export async function getRooms() {
-  const response = await fetch(`${BASE_URL}/rooms/`); // 백엔드 해당 url에서 fetch
-  const json = await response.json(); // response 로부터 json 추출
-  return json;
-}
+const instance = axios.create({
+  baseURL: 'http://127.0.0.1:8001/api/v1/',
+});
+
+export const getRooms = () =>
+  instance.get('rooms/').then((response) => response.data);

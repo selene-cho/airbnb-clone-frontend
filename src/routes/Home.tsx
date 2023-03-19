@@ -26,8 +26,9 @@ export default function Home() {
   // Query에는 queryKey 만들어줘야함
   // key는 fetch한 결과물을 기억하는 캐싱작업에 사용, key는 array여야 함
   const { isLoading, data } = useQuery<IRoom[]>(['rooms'], getRooms); // rooms라는 key에 fetch 해온 것 담김
-  // getRooms 함수 가져가서 isLoading 중인지 아닌지 알려줌
-  // -> json을 retrun 하니까 그것을 data로 받아와서 data 준비여부 알려줌
+  // getRooms 함수가 API로부터 Query 가져옴
+  // -> isLoading 중인지 아닌지 알려줌
+  // -> json을 retrun 하니까 그것을 data로 받아와서 data 준비여부 알려줌 (함수가 리턴하는 결과물 data로 받아옴)
   // -> 그 결과를 rooms 라는 캐시에 저장
   return (
     <Grid
