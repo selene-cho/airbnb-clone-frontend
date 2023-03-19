@@ -5,13 +5,19 @@ import {
   HStack,
   IconButton,
   LightMode,
+  Menu,
+  MenuButton,
+  MenuItem,
+  MenuList,
   Stack,
   useColorMode,
   useColorModeValue,
   useDisclosure,
+  useToast,
 } from '@chakra-ui/react';
 import { FaAirbnb, FaMoon, FaSun } from 'react-icons/fa';
 import { Link } from 'react-router-dom';
+import { logOut } from '../api';
 import useUser from '../lib/useUser';
 
 import LoginModal from './LoginModal';
@@ -33,6 +39,24 @@ export default function Header() {
   const { toggleColorMode } = useColorMode();
   const logoColor = useColorModeValue('red.500', 'red.200'); // light Mode 일ㄷ 때 값, dark Mode 일 때 값 -> chakara 기본 Hook
   const Icon = useColorModeValue(FaMoon, FaSun); // 컴포넌트 만들기 위해 첫글자 대문자로 시작
+  const toast = useToast();
+  const onLogOut = async () => {
+    const toastId = toast({
+      title: 'Login out...',
+      description: 'Sad to See you go...',
+      status: 'loading',
+      position: 'bottom-right',
+    });
+    // const data = await logOut();
+    // console.log(data);
+    setTimeout(() => {
+      toast.update(toastId, {
+        status: 'success',
+        title: 'Done!',
+        description: 'See you later!',
+      });
+    }, 5000);
+  };
 
   return (
     <Stack
@@ -76,7 +100,14 @@ export default function Header() {
             </>
           ) : (
             // 로그인했으면 (isLoggedIn이면) Avatar 보여줘
-            <Avatar name={user?.name} src={user?.avatar} size={'md'} />
+            <Menu>
+              <MenuButton>
+                <Avatar name={user?.name} src={user?.avatar} size={'md'} />
+              </MenuButton>
+              <MenuList>
+                <MenuItem onClick={onLogOut}>Log out</MenuItem>
+              </MenuList>
+            </Menu>
           ) // user 정보 아직 Loading중이면 아무것도 보여주지마
         ) : null}
       </HStack>
