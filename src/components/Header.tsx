@@ -1,4 +1,5 @@
 import {
+  Avatar,
   Box,
   Button,
   HStack,
@@ -11,11 +12,13 @@ import {
 } from '@chakra-ui/react';
 import { FaAirbnb, FaMoon, FaSun } from 'react-icons/fa';
 import { Link } from 'react-router-dom';
+import useUser from '../lib/useUser';
 
 import LoginModal from './LoginModal';
 import SignUpModal from './SignUpModal';
 
 export default function Header() {
+  const { userLoading, isLoggedIn, user } = useUser();
   const {
     isOpen: isLoginOpen,
     onClose: onLoginClose,
@@ -58,16 +61,24 @@ export default function Header() {
         <IconButton
           onClick={toggleColorMode}
           variant={'ghost'}
-          aria-label="Toggle dark mode"
+          aria-label="Toggle dark mode" // Screen Reader가 읽어주는 Text
           icon={<Icon />}
         />
-        {/* Screen Reader가 읽어주는 Text */}
-        <Button onClick={onLoginOpen}>Log in</Button>
-        <LightMode>
-          <Button onClick={onSignUpOpen} colorScheme={'red'}>
-            Sign in
-          </Button>
-        </LightMode>
+        {!userLoading ? ( // user 정보가 Loading 중이 아니면 (로딩끝났으면), 로그인 정보 확인
+          !isLoggedIn ? ( // Login하지 않았다면 앞의 로그인, 회원가인 버튼 보여줘
+            <>
+              <Button onClick={onLoginOpen}>Log in</Button>
+              <LightMode>
+                <Button onClick={onSignUpOpen} colorScheme={'red'}>
+                  Sign in
+                </Button>
+              </LightMode>
+            </>
+          ) : (
+            // 로그인했으면 (isLoggedIn이면) Avatar 보여줘
+            <Avatar size={'md'} />
+          ) // user 정보 아직 Loading중이면 아무것도 보여주지마
+        ) : null}
       </HStack>
       <LoginModal isOpen={isLoginOpen} onClose={onLoginClose} />
       <SignUpModal isOpen={isSignUpOpen} onClose={onSignUpClose} />
