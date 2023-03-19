@@ -11,6 +11,7 @@ import {
 import { FaRegHeart, FaStar } from 'react-icons/fa';
 
 interface IRoomProps {
+  // props의 type 명시
   imageUrl: string;
   name: string;
   rating: number;
@@ -27,6 +28,7 @@ export default function Room({
   country,
   price,
 }: IRoomProps) {
+  // typescript는 props 쓰기 위해서 어떤 종류의 props인지 알려줘야함 :IRoomProps에 정의해놨다는 것 알려주기
   const gray = useColorModeValue('gray.600', 'gay.300');
   return (
     <VStack alignItems={'flex-start'}>
