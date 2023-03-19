@@ -15,6 +15,7 @@ import {
   useDisclosure,
   useToast,
 } from '@chakra-ui/react';
+import { useQueryClient } from '@tanstack/react-query';
 import { FaAirbnb, FaMoon, FaSun } from 'react-icons/fa';
 import { Link } from 'react-router-dom';
 import { logOut } from '../api';
@@ -40,6 +41,7 @@ export default function Header() {
   const logoColor = useColorModeValue('red.500', 'red.200'); // light Mode 일ㄷ 때 값, dark Mode 일 때 값 -> chakara 기본 Hook
   const Icon = useColorModeValue(FaMoon, FaSun); // 컴포넌트 만들기 위해 첫글자 대문자로 시작
   const toast = useToast();
+  const queryClient = useQueryClient();
   const onLogOut = async () => {
     const toastId = toast({
       title: 'Login out...',
@@ -47,15 +49,15 @@ export default function Header() {
       status: 'loading',
       position: 'bottom-right',
     });
-    // const data = await logOut();
-    // console.log(data);
+    await logOut();
+    queryClient.refetchQueries(['me']); // queryClient가 me라는 query를 다시 fetch 하도록 함
     setTimeout(() => {
       toast.update(toastId, {
         status: 'success',
         title: 'Done!',
         description: 'See you later!',
       });
-    }, 5000);
+    }, 2000);
   };
 
   return (

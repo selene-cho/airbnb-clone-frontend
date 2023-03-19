@@ -9,3 +9,5 @@
 \$ npm i @tanstack/react-query<br>
 \& npm i axios<br>
 \$ npm i @tanstack/react-query-devtools<br>
+\$ npm i js-cookie<br>
+\$ npm i --save-dev @types/js-cookie<br>
