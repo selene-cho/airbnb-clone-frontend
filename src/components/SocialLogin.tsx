@@ -2,6 +2,13 @@ import { Box, Button, Divider, HStack, Text, VStack } from '@chakra-ui/react';
 import { FaComment, FaGithub } from 'react-icons/fa';
 
 export default function SocialLogin() {
+  const kakaoParams = {
+    client_id: '3502eaf7979d5335957aa3709799a122',
+    redirect_uri: 'http://127.0.0.1:3001/social/kakao',
+    response_type: 'code',
+  };
+  const params = new URLSearchParams(kakaoParams).toString();
+
   return (
     <Box mb={4}>
       <HStack my={8}>
@@ -21,7 +28,14 @@ export default function SocialLogin() {
         >
           Continue with Github
         </Button>
-        <Button w="100%" leftIcon={<FaComment />} colorScheme={'yellow'}>
+        <Button
+          as="a"
+          // href={`https://kauth.kakao.com/ouath/authorize?${params}`}
+          href="https://kauth.kakao.com/ouath/authorize?client_id=3502eaf7979d5335957aa3709799a122&redirect_uri=http://127.0.0.1:3001/social/kakao&response_type=code"
+          w="100%"
+          leftIcon={<FaComment />}
+          colorScheme={'yellow'}
+        >
           Continue with Kakao
         </Button>
       </VStack>
