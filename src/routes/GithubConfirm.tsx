@@ -1,16 +1,36 @@
-import { Heading, Spinner, Text, VStack } from '@chakra-ui/react';
+import {
+  Heading,
+  Spinner,
+  Text,
+  Toast,
+  useToast,
+  VStack,
+} from '@chakra-ui/react';
+import { useQueryClient } from '@tanstack/react-query';
 import { useEffect } from 'react';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { githubLogIn } from '../api';
 
 export default function GithubConfirm() {
   const { search } = useLocation(); // 우리가 있는 곳 알려 줌
+  const toast = useToast();
+  const queryClient = useQueryClient();
+  const navigate = useNavigate();
   const confirmLogin = async () => {
     const params = new URLSearchParams(search);
     const code = params.get('code');
     if (code) {
       // code 없을 수도 있기 때문에 있는지 없는지 확인
-      await githubLogIn(code);
+      const status = await githubLogIn(code);
+      if (status === 200) {
+        toast({
+          status: 'success',
+          title: 'Welcome!',
+          description: 'Happy to have you back!',
+        });
+        queryClient.refetchQueries(['me']);
+        navigate('/');
+      }
     }
   };
   useEffect(() => {
