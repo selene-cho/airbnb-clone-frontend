@@ -10,12 +10,14 @@ import {
   MenuItem,
   MenuList,
   Stack,
+  ToastId,
   useColorMode,
   useColorModeValue,
   useDisclosure,
   useToast,
 } from '@chakra-ui/react';
-import { useQueryClient } from '@tanstack/react-query';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useRef } from 'react';
 import { FaAirbnb, FaMoon, FaSun } from 'react-icons/fa';
 import { Link } from 'react-router-dom';
 import { logOut } from '../api';
@@ -42,22 +44,29 @@ export default function Header() {
   const Icon = useColorModeValue(FaMoon, FaSun); // 컴포넌트 만들기 위해 첫글자 대문자로 시작
   const toast = useToast();
   const queryClient = useQueryClient();
-  const onLogOut = async () => {
-    const toastId = toast({
-      title: 'Login out...',
-      description: 'Sad to See you go...',
-      status: 'loading',
-      position: 'bottom-right',
-    });
-    await logOut();
-    queryClient.refetchQueries(['me']); // queryClient가 me라는 query를 다시 fetch 하도록 함
-    setTimeout(() => {
-      toast.update(toastId, {
-        status: 'success',
-        title: 'Done!',
-        description: 'See you later!',
+  const toastId = useRef<ToastId>(); //useRef는 state에 넣고 싶지 않은 value를 저장할 때 사용함, 컴포넌트에 re-render 여러번 발생해도 이 value는 지속됨
+  const mutation = useMutation(logOut, {
+    onMutate: () => {
+      toastId.current = toast({
+        title: 'Login out...',
+        description: 'Sad to See you go...',
+        status: 'loading',
+        position: 'bottom-right',
       });
-    }, 2000);
+    },
+    onSuccess: () => {
+      if (toastId.current) {
+        queryClient.refetchQueries(['me']); // queryClient가 me라는 query를 다시 fetch 하도록 함
+        toast.update(toastId.current, {
+          status: 'success',
+          title: 'Done!',
+          description: 'See you later!',
+        });
+      }
+    },
+  });
+  const onLogOut = async () => {
+    mutation.mutate();
   };
 
   return (

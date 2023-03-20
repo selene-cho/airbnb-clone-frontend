@@ -40,6 +40,7 @@ export default function LoginModal({ isOpen, onClose }: LoginModalProps) {
     register,
     handleSubmit,
     formState: { errors },
+    reset,
   } = useForm<IForm>(); // Form에 Input을 register_등록하는데 사용함.
   // handleSubmit은 data를 validate_검증하는 함수 -> event.preventDefault 기본으로 해줌
   const toast = useToast();
@@ -50,9 +51,9 @@ export default function LoginModal({ isOpen, onClose }: LoginModalProps) {
     IUsernameLoginError,
     IUsernameLoginVariables
   >(usernameLogIn, {
-    onMutate: () => {
-      console.log('mutation starting');
-    },
+    // onMutate: () => {
+    //   console.log('mutation starting');
+    // },
     onSuccess: (data) => {
       // data.ok
       toast({
@@ -62,11 +63,12 @@ export default function LoginModal({ isOpen, onClose }: LoginModalProps) {
       // console.log('mutation is successful');
       onClose();
       queryClient.refetchQueries(['me']);
+      reset();
     },
-    onError: (error) => {
-      // error.error
-      console.log('mutation has an error');
-    },
+    // onError: (error) => {
+    //   // error.error
+    //   console.log('mutation has an error');
+    // },
   });
   const onSubmit = ({ username, password }: IForm) => {
     mutation.mutate({ username, password });
@@ -123,6 +125,11 @@ export default function LoginModal({ isOpen, onClose }: LoginModalProps) {
               </Text> */}
             </InputGroup>
           </VStack>
+          {mutation.isError ? (
+            <Text color="red.500" textAlign={'center'} fontSize="sm">
+              Username of Password are wrong
+            </Text>
+          ) : null}
           <Button
             isLoading={mutation.isLoading}
             type="submit"
