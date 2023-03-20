@@ -10,9 +10,10 @@ import {
   ModalContent,
   ModalHeader,
   ModalOverlay,
+  Text,
   VStack,
 } from '@chakra-ui/react';
-import { useState } from 'react';
+import { useForm } from 'react-hook-form'; // react-hook-form은 페이지에 어떤 input이 있는지 몰라서 input이 어떤건지 어디에 있는지 알려줘야함
 import { FaLock, FaUserNinja } from 'react-icons/fa';
 import SocialLogin from './SocialLogin';
 
@@ -21,33 +22,30 @@ interface LoginModalProps {
   onClose: () => void;
 }
 
+interface IForm {
+  username: string;
+  password: string;
+}
+
 export default function LoginModal({ isOpen, onClose }: LoginModalProps) {
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
-  const [email, setEmail] = useState('');
-  const [emailError, setEmailError] = useState('');
-  const onChange = (event: React.SyntheticEvent<HTMLInputElement>) => {
-    const { name, value } = event.currentTarget;
-    if (name === 'username') {
-      setUsername(value);
-    } else if (name === 'password') {
-      setPassword(value);
-    }
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<IForm>(); // Form에 Input을 register_등록하는데 사용함.
+  // handleSubmit은 data를 validate_검증하는 함수 -> event.preventDefault 기본으로 해줌
+  const onSubmit = (data: IForm) => {
+    console.log(data);
   };
-  const onSubmit = (event: React.SyntheticEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    if (!email.includes('@')) {
-      setEmailError('please write a valid email');
-    }
-    console.log(username, password);
-  };
+
   return (
     <Modal onClose={onClose} isOpen={isOpen}>
       <ModalOverlay /> {/* 모달클릭시 배경 약간 어둡게 overlay 적용 */}
       <ModalContent>
         <ModalHeader>Log in</ModalHeader>
         <ModalCloseButton />
-        <ModalBody as="form" onSubmit={onSubmit as any}>
+        <ModalBody as="form" onSubmit={handleSubmit(onSubmit)}>
+          {/* handleSubmit 함수와 함께 onSubmit 실행 -> 여기서 validation preventDefault 해줌 */}
           <VStack>
             <InputGroup size={'md'}>
               <InputLeftElement
@@ -58,9 +56,10 @@ export default function LoginModal({ isOpen, onClose }: LoginModalProps) {
                 }
               />
               <Input
-                name="username"
-                onChange={onChange}
-                value={username}
+                isInvalid={Boolean(errors.username?.message)} // username errors object에 어떤 message가 있다면 해당 input은 invalid 한 것.
+                {...register('username', {
+                  required: 'Please write a username',
+                })} // ...으로 모든 property를 넣음!
                 variant={'filled'}
                 placeholder="Username"
                 required
@@ -75,14 +74,18 @@ export default function LoginModal({ isOpen, onClose }: LoginModalProps) {
                 }
               />
               <Input
-                name="password"
-                onChange={onChange}
-                value={password}
+                isInvalid={Boolean(errors.password?.message)}
+                {...register('password', {
+                  required: 'Please write a password',
+                })}
                 type="password"
                 variant={'filled'}
                 placeholder="Password"
                 required
               />
+              {/* <Text fontSize={'sm'} color="red.500">
+                {errors.password?.message}
+              </Text> */}
             </InputGroup>
           </VStack>
           <Button type="submit" mt={4} colorScheme={'red'} w="100%">
