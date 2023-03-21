@@ -1,10 +1,12 @@
 import {
   Box,
+  Button,
   Checkbox,
   Container,
   FormControl,
   FormHelperText,
   FormLabel,
+  Grid,
   Heading,
   Input,
   InputGroup,
@@ -13,18 +15,31 @@ import {
   Textarea,
   VStack,
 } from '@chakra-ui/react';
+import { useQuery } from '@tanstack/react-query';
 import { FaBed, FaMoneyBill, FaToilet } from 'react-icons/fa';
+import { getAmenities, getCategories } from '../api';
 import useHostOnlyPage from '../components/HostOnlyPage';
 import ProtectedPage from '../components/ProtectedPage';
+import { IAmenity, ICategory } from '../types';
 
 export default function UploadRoom() {
+  // ['amenities'] = Query 이름, getAmenities 가져오는 fetch할 함수
+  const { data: amenities, isLoading: isAmenitiesLoading } = useQuery<
+    IAmenity[]
+  >(['amenities'], getAmenities);
+  // console.log(data, isLoading);
+
+  const { data: categories, isLoading: isCategoriesLoading } = useQuery<
+    ICategory[]
+  >(['categories'], getCategories);
+  console.log(categories, isCategoriesLoading);
   useHostOnlyPage();
   return (
     <ProtectedPage>
       <Box pb={40} mt={10} px={{ base: 10, lg: 40 }}>
         <Container>
           <Heading textAlign={'center'}>Upload Room</Heading>
-          <VStack spacing={5} as="form" mt={5}>
+          <VStack spacing={10} as="form" mt={5}>
             <FormControl>
               <FormLabel>Name</FormLabel>
               <Input required type="text" />
@@ -81,6 +96,33 @@ export default function UploadRoom() {
                 What kind of room are you renting?
               </FormHelperText>
             </FormControl>
+            <FormControl>
+              <FormLabel>Category</FormLabel>
+              <Select placeholder="Choose a kind">
+                {categories?.map((category) => (
+                  <option key={category.pk} value={category.pk}>
+                    {category.name}
+                  </option>
+                ))}
+              </Select>
+              <FormHelperText>
+                What category describes your room?
+              </FormHelperText>
+            </FormControl>
+            <FormControl>
+              <FormLabel>Amenities</FormLabel>
+              <Grid templateColumns={'1fr 1fr'} gap={5}>
+                {amenities?.map((amenity) => (
+                  <Box key={amenity.pk}>
+                    <Checkbox>{amenity.name}</Checkbox>
+                    <FormHelperText>{amenity.description}</FormHelperText>
+                  </Box>
+                ))}
+              </Grid>
+            </FormControl>
+            <Button colorScheme={'red'} size="lg" w="100%">
+              Upload Room
+            </Button>
           </VStack>
         </Container>
       </Box>
