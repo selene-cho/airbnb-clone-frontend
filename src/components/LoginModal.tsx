@@ -51,9 +51,9 @@ export default function LoginModal({ isOpen, onClose }: LoginModalProps) {
     IUsernameLoginError,
     IUsernameLoginVariables
   >(usernameLogIn, {
-    // onMutate: () => {
-    //   console.log('mutation starting');
-    // },
+    onMutate: () => {
+      console.log('mutation starting');
+    },
     onSuccess: (data) => {
       // data.ok
       toast({
@@ -63,12 +63,12 @@ export default function LoginModal({ isOpen, onClose }: LoginModalProps) {
       // console.log('mutation is successful');
       onClose();
       queryClient.refetchQueries(['me']);
-      reset();
+      // reset();
     },
-    // onError: (error) => {
-    //   // error.error
-    //   console.log('mutation has an error');
-    // },
+    onError: (error) => {
+      // error.error
+      console.log('mutation has an error');
+    },
   });
   const onSubmit = ({ username, password }: IForm) => {
     mutation.mutate({ username, password });
@@ -127,7 +127,7 @@ export default function LoginModal({ isOpen, onClose }: LoginModalProps) {
           </VStack>
           {mutation.isError ? (
             <Text color="red.500" textAlign={'center'} fontSize="sm">
-              Username of Password are wrong
+              Username or Password are wrong
             </Text>
           ) : null}
           <Button
