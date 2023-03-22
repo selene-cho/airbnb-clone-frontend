@@ -3,7 +3,7 @@ import { FaComment, FaGithub } from 'react-icons/fa';
 
 export default function SocialLogin() {
   const kakaoParams = {
-    client_id: '3502eaf7979d5335957aa3709799a122',
+    client_id: '265e7f2b838fa7fb33b69ff6d9364c7a',
     redirect_uri: 'http://127.0.0.1:3001/social/kakao',
     response_type: 'code',
   };
@@ -30,8 +30,7 @@ export default function SocialLogin() {
         </Button>
         <Button
           as="a"
-          // href={`https://kauth.kakao.com/ouath/authorize?${params}`}
-          href="https://kauth.kakao.com/ouath/authorize?client_id=3502eaf7979d5335957aa3709799a122&redirect_uri=http://127.0.0.1:3001/social/kakao&response_type=code"
+          href={`https://kauth.kakao.com/ouath/authorize?${params}`}
           w="100%"
           leftIcon={<FaComment />}
           colorScheme={'yellow'}
